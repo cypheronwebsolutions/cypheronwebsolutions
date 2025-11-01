@@ -11,10 +11,10 @@ All colors MUST be HSL.
     --background: 300 7% 97%;
     --foreground: 0 0% 10%;
 
-    --card: 0 0% 100%;
+    --card: 300 7% 97%;
     --card-foreground: 0 0% 10%;
 
-    --popover: 0 0% 100%;
+    --popover: 300 7% 97%;
     --popover-foreground: 0 0% 10%;
 
     --primary: 290 35% 25%;
@@ -38,7 +38,7 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 300 7% 97%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
