@@ -1,13 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, Target, Lightbulb, Handshake } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+
 
 const About = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center max-w-3xl mx-auto">
@@ -131,7 +128,6 @@ const About = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

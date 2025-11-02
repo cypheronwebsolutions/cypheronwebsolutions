@@ -2,14 +2,11 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Globe, Building2, ShoppingCart, Activity, Users, BarChart, Search, Facebook, Mail } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+
 
 const Services = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center max-w-3xl mx-auto">
@@ -199,8 +196,6 @@ const Services = () => {
           </Link>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

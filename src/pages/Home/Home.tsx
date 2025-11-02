@@ -5,17 +5,12 @@ import ProvenResults from "./ProvenResults"
 import ProcessSection from "./ProcessSection.tsx";
 import FAQ from "./FAQ.tsx";
 import CTA from "@/components/CTA.tsx"
-import Navbar from "@/components/Navbar.tsx";
-import Footer from "@/components/Footer.tsx";
 
 
 
 const Home = () => {
   return (
       <div className="min-h-screen flex flex-col">
-        {/* Navigation Bar */}
-        <Navbar/>
-
         {/* Hero Section */}
         <HeroSection/>
 
@@ -37,7 +32,6 @@ const Home = () => {
         {/* CTA Section */}
         <CTA/>
 
-        <Footer/>
       </div>
   );
 };
