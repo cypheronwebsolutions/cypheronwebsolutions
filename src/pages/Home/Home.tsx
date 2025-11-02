@@ -5,37 +5,34 @@ import ProvenResults from "./ProvenResults"
 import ProcessSection from "./ProcessSection.tsx";
 import FAQ from "./FAQ.tsx";
 import CTA from "@/components/CTA.tsx"
-import RainbowScroll from "@/components/RainbowScroll"
 
 
 
 const Home = () => {
   return (
-      <RainbowScroll>
-        <div className="min-h-screen flex flex-col">
-          {/* Hero Section */}
-          <HeroSection/>
+      <div className="min-h-screen flex flex-col">
+        {/* Hero Section */}
+        <HeroSection/>
 
-          {/* Website Types Section */}
-          <WebTypesSection/>
+        {/* Website Types Section */}
+        <WebTypesSection/>
 
-          {/* Why Choose Section */}
-          <WhyChooseSection/>
+        {/* Why Choose Section */}
+        <WhyChooseSection/>
 
-          {/* Proven Results */}
-          <ProvenResults/>
+        {/* Proven Results */}
+        <ProvenResults/>
 
-          {/* Process Section */}
-          <ProcessSection/>
+        {/* Process Section */}
+        <ProcessSection/>
 
-          {/* FAQ Section */}
-          <FAQ/>
+        {/* FAQ Section */}
+        <FAQ/>
 
-          {/* CTA Section */}
-          <CTA/>
+        {/* CTA Section */}
+        <CTA/>
 
-        </div>
-      </RainbowScroll>
+      </div>
   );
 };
 
