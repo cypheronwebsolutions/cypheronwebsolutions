@@ -6,27 +6,39 @@ import cypheronLogo from "@/assets/cypheron_logo.png";
 import cypheronLogo2 from "@/assets/cypheron_logo2.png";
 
 const HeroSection = () => {
-  const [visibleImages, setVisibleImages] = useState<{ [key: string]: boolean }>({});
+  const [showImages, setShowImages] = useState(false);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
-  const handleHover = (imageId: string) => {
-    setVisibleImages(prev => ({ ...prev, [imageId]: true }));
+  const handleMouseMove = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
     
-    setTimeout(() => {
-      setVisibleImages(prev => ({ ...prev, [imageId]: false }));
+    setShowImages(true);
+    
+    const newTimeoutId = setTimeout(() => {
+      setShowImages(false);
     }, 2000);
+    
+    setTimeoutId(newTimeoutId);
   };
 
-  const hoverAreas = [
-    { id: "img1", top: "15%", left: "10%", image: cypheronLogo },
-    { id: "img2", top: "25%", right: "15%", image: cypheronLogo2 },
-    { id: "img3", top: "60%", left: "20%", image: cypheronLogo },
-    { id: "img4", top: "70%", right: "25%", image: cypheronLogo2 },
-    { id: "img5", top: "40%", left: "5%", image: cypheronLogo2 },
-    { id: "img6", top: "50%", right: "8%", image: cypheronLogo },
+  const images = [
+    { id: 1, top: "10%", left: "8%", image: cypheronLogo, rotate: -12, size: "w-28" },
+    { id: 2, top: "20%", right: "12%", image: cypheronLogo2, rotate: 15, size: "w-32" },
+    { id: 3, top: "35%", left: "15%", image: cypheronLogo2, rotate: -8, size: "w-24" },
+    { id: 4, top: "45%", right: "18%", image: cypheronLogo, rotate: 10, size: "w-36" },
+    { id: 5, top: "60%", left: "10%", image: cypheronLogo, rotate: -15, size: "w-28" },
+    { id: 6, top: "70%", right: "8%", image: cypheronLogo2, rotate: 8, size: "w-32" },
+    { id: 7, top: "25%", left: "5%", image: cypheronLogo2, rotate: 12, size: "w-24" },
+    { id: 8, top: "55%", right: "5%", image: cypheronLogo, rotate: -10, size: "w-28" },
   ];
 
   return (
-      <section className="relative flex flex-col items-center justify-center text-center min-h-screen px-4 overflow-hidden">
+      <section 
+        className="relative flex flex-col items-center justify-center text-center min-h-screen px-4 overflow-hidden"
+        onMouseMove={handleMouseMove}
+      >
         <p className="text-sm md:text-base text-muted-foreground mb-4 flex items-center gap-2 justify-center">
           <Zap className="h-4 w-4" />
           Premium Web Solutions
@@ -50,34 +62,21 @@ const HeroSection = () => {
           </Link>
         </div>
 
-        {/* Hover trigger areas */}
-        {hoverAreas.map((area) => (
-          <div
-            key={area.id}
-            className="absolute w-32 h-32 cursor-pointer z-10"
-            style={{
-              top: area.top,
-              left: area.left,
-              right: area.right,
-            }}
-            onMouseEnter={() => handleHover(area.id)}
-          />
-        ))}
-
-        {/* Pop-up images */}
-        {hoverAreas.map((area) => (
+        {/* Pop-up images scattered irregularly */}
+        {images.map((img) => (
           <img
-            key={`${area.id}-img`}
-            src={area.image}
+            key={img.id}
+            src={img.image}
             alt="Cypheron"
-            className={`absolute w-32 md:w-40 pointer-events-none transition-all duration-300 ${
-              visibleImages[area.id] ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+            className={`absolute ${img.size} md:${img.size.replace('w-', 'w-')} pointer-events-none transition-all duration-500 ${
+              showImages ? 'opacity-90 scale-100' : 'opacity-0 scale-75'
             }`}
             style={{
-              top: area.top,
-              left: area.left,
-              right: area.right,
-              zIndex: 20,
+              top: img.top,
+              left: img.left,
+              right: img.right,
+              transform: `rotate(${img.rotate}deg)`,
+              zIndex: 5,
             }}
           />
         ))}
