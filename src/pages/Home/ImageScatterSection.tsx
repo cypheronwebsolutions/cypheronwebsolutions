@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import HoverImg1 from "@/assets/HeroSection/img1.png";
 import HoverImg2 from "@/assets/HeroSection/img2.png";
 import HoverImg3 from "@/assets/HeroSection/img3.png";
@@ -9,7 +9,7 @@ import HoverImg7 from "@/assets/HeroSection/img7.png";
 import HoverImg8 from "@/assets/HeroSection/img8.png";
 import HoverImg9 from "@/assets/HeroSection/img9.png";
 
-/** ---------- Typewriter with Shadow (responsive + auto-hide when done) ---------- */
+/** ---------- Typewriter (no shadow, centered) ---------- */
 type Segment = { text: string; className?: string };
 type Line = Segment[];
 
@@ -17,36 +17,20 @@ const Typewriter = ({
                       lines,
                       typingSpeed = 28,
                       linePause = 700,
-                      showShadow = true,
-                      shadowClass = "opacity-30",
-                      shadowOffset = { x: 0, y: 0 },
                     }: {
   lines: Line[];
   typingSpeed?: number;
   linePause?: number;
-  showShadow?: boolean;
-  shadowClass?: string;
-  shadowOffset?: { x: number; y: number };
 }) => {
   const [lineIdx, setLineIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const timer = useRef<number | null>(null);
-
-  // Responsive: disable shadow on small screens (<768px)
-  useEffect(() => {
-    const check = () => setIsSmallScreen(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   const currentLine = lines[lineIdx] || [];
   const lineText = currentLine.map((s) => s.text).join("");
   const isLineDone = charIdx >= lineText.length;
   const isAllDone = lineIdx >= lines.length;
 
-  // Typing loop
   useEffect(() => {
     if (isAllDone) return;
     if (!isLineDone) {
@@ -83,43 +67,15 @@ const Typewriter = ({
   );
 
   const doneLines = lines.slice(0, Math.min(lineIdx, lines.length));
-  const activeLine = currentLine;
-  const activeShown = sliceSegments(activeLine, charIdx);
+  const activeShown = sliceSegments(currentLine, charIdx);
 
   return (
-      <div className="space-y-2 relative">
-        {/* SHADOW LAYER (visible only while typing AND not small screen) */}
-        {showShadow && !isAllDone && !isSmallScreen && (
-            <div
-                className="absolute inset-0 pointer-events-none select-none transition-opacity"
-                aria-hidden
-                style={{
-                  transform: `translate(${shadowOffset.x}px, ${shadowOffset.y}px)`,
-                  textShadow: "0.06em 0.06em 0.35em rgba(0,0,0,0.35)",
-                  filter: "blur(0.1px)",
-                }}
-            >
-              <div className="space-y-2">
-                {doneLines.map((line, i) => (
-                    <div key={`shadow-done-${i}`} className={shadowClass}>
-                      {renderSegments(line)}
-                    </div>
-                ))}
-                <div key="shadow-active" className={shadowClass}>
-                  {renderSegments(activeLine)}
-                </div>
-              </div>
-            </div>
-        )}
-
-        {/* FOREGROUND: finished lines at 100% */}
+      <div className="space-y-2 text-center"> {/* ✅ centered text */}
         {doneLines.map((line, i) => (
             <div key={`done-${i}`} className="opacity-100">
               {renderSegments(line)}
             </div>
         ))}
-
-        {/* FOREGROUND: active line at 100% */}
         {!isAllDone && (
             <div key={`active-${lineIdx}`} className="opacity-100">
               {renderSegments(activeShown)}
@@ -129,7 +85,7 @@ const Typewriter = ({
       </div>
   );
 };
-/** ---------- /Typewriter with Shadow ---------- */
+/** ---------- /Typewriter ---------- */
 
 const ImageScatterSection = () => {
   const [visibleImages, setVisibleImages] = useState<number[]>([]);
@@ -225,15 +181,9 @@ const ImageScatterSection = () => {
           )}
 
           <div className="relative z-10 pointer-events-none w-full max-w-4xl px-6">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground leading-relaxed text-left">
-              <Typewriter
-                  lines={typedLines}
-                  typingSpeed={28}
-                  linePause={700}
-                  showShadow
-                  shadowClass="opacity-30"
-                  shadowOffset={{ x: 0, y: 0 }}
-              />
+            {/* ✅ text aligned center */}
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground leading-relaxed text-center">
+              <Typewriter lines={typedLines} typingSpeed={28} linePause={700} />
             </h2>
           </div>
 
