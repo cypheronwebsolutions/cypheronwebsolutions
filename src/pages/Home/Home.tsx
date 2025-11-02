@@ -5,6 +5,7 @@ import ProvenResults from "./ProvenResults"
 import ProcessSection from "./ProcessSection.tsx";
 import FAQ from "./FAQ.tsx";
 import CTA from "@/components/CTA.tsx"
+import BackToTop from "./BackToTop.tsx";
 
 const Home = () => {
   return (
@@ -29,6 +30,7 @@ const Home = () => {
 
       {/* CTA Section */}
       <CTA/>
+      <BackToTop />
     </div>
   );
 };
