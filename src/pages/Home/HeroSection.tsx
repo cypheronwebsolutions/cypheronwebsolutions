@@ -10,12 +10,12 @@ const HeroSection = () => {
       <div>
         {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center min-h-screen p-20">
-          <p className="text-sm md:text-base text-muted-foreground mb-4 flex items-center gap-2 justify-center animate-fade-in opacity-0" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+          <p className="text-sm md:text-base text-muted-foreground mb-4 flex items-center gap-2 justify-center">
             <Zap className="h-4 w-4" />
             Premium Web Solutions
           </p>
 
-          <h1 className="text-4xl md:text-8xl lg:text-[150px] font-bold mb-6 leading-tight animate-fade-in opacity-0" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+          <h1 className="text-4xl md:text-8xl lg:text-[150px] font-bold mb-6 leading-tight">
             We Design.
             <br />
             <span className="text-accent">We Build.</span>
@@ -23,16 +23,16 @@ const HeroSection = () => {
             We Scale.
           </h1>
 
-          <p className="text-lg md:text-2xl text-muted-foreground mb-8 max-w-3xl animate-fade-in opacity-0" style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}>
+          <p className="text-lg md:text-2xl text-muted-foreground mb-8 max-w-3xl">
             Transform your digital presence with high-end web solutions that drive
             real business growth.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-4 animate-fade-in opacity-0" style={{ animationDelay: '0.8s', animationFillMode: 'forwards' }}>
+          <div className="flex flex-wrap justify-center gap-4">
             <Link to="/contact">
               <Button
                   size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 hover-scale"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 Start Your Project
               </Button>
