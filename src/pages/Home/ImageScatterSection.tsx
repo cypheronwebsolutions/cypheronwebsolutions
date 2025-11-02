@@ -9,7 +9,7 @@ import HoverImg7 from "@/assets/HeroSection/img7.png";
 import HoverImg8 from "@/assets/HeroSection/img8.png";
 import HoverImg9 from "@/assets/HeroSection/img9.png";
 
-/** ---------- Typewriter (no shadow, centered) ---------- */
+/** ---------- Typewriter (no shadow, centered, starts on view) ---------- */
 type Segment = { text: string; className?: string };
 type Line = Segment[];
 
@@ -17,22 +17,39 @@ const Typewriter = ({
                       lines,
                       typingSpeed = 28,
                       linePause = 700,
+                      shouldStart = true,     // 👈 new: external trigger
+                      once = true,            // 👈 new: start only once
                     }: {
   lines: Line[];
   typingSpeed?: number;
   linePause?: number;
+  shouldStart?: boolean;
+  once?: boolean;
 }) => {
   const [lineIdx, setLineIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false); // 👈 new
   const timer = useRef<number | null>(null);
+
+  // Start logic (one-time by default)
+  useEffect(() => {
+    if (shouldStart) {
+      setHasStarted((prev) => (once ? prev || true : true));
+    } else if (!once) {
+      // if not once, allow pausing/reset logic as needed (optional)
+      // setHasStarted(false);
+    }
+  }, [shouldStart, once]);
 
   const currentLine = lines[lineIdx] || [];
   const lineText = currentLine.map((s) => s.text).join("");
   const isLineDone = charIdx >= lineText.length;
   const isAllDone = lineIdx >= lines.length;
 
+  // Typing loop — only runs after hasStarted
   useEffect(() => {
-    if (isAllDone) return;
+    if (!hasStarted || isAllDone) return;
+
     if (!isLineDone) {
       timer.current = window.setTimeout(() => setCharIdx((i) => i + 1), typingSpeed);
     } else {
@@ -44,7 +61,7 @@ const Typewriter = ({
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, [charIdx, isLineDone, isAllDone, typingSpeed, linePause]);
+  }, [hasStarted, charIdx, isLineDone, isAllDone, typingSpeed, linePause]);
 
   const sliceSegments = (line: Line, revealChars: number) => {
     let remaining = revealChars;
@@ -70,17 +87,22 @@ const Typewriter = ({
   const activeShown = sliceSegments(currentLine, charIdx);
 
   return (
-      <div className="space-y-2 text-center"> {/* ✅ centered text */}
-        {doneLines.map((line, i) => (
-            <div key={`done-${i}`} className="opacity-100">
-              {renderSegments(line)}
-            </div>
-        ))}
-        {!isAllDone && (
-            <div key={`active-${lineIdx}`} className="opacity-100">
-              {renderSegments(activeShown)}
-              <span className="inline-block w-[0.6ch] -mb-0.5 animate-pulse">|</span>
-            </div>
+      <div className="space-y-2 text-center">
+        {/* Render nothing until we start (keeps layout clean) */}
+        {!hasStarted ? null : (
+            <>
+              {doneLines.map((line, i) => (
+                  <div key={`done-${i}`} className="opacity-100">
+                    {renderSegments(line)}
+                  </div>
+              ))}
+              {!isAllDone && (
+                  <div key={`active-${lineIdx}`} className="opacity-100">
+                    {renderSegments(activeShown)}
+                    <span className="inline-block w-[0.6ch] -mb-0.5 animate-pulse">|</span>
+                  </div>
+              )}
+            </>
         )}
       </div>
   );
@@ -91,15 +113,8 @@ const ImageScatterSection = () => {
   const [visibleImages, setVisibleImages] = useState<number[]>([]);
   const [imagesPerRow, setImagesPerRow] = useState(9);
   const hoverImages = [
-    HoverImg1,
-    HoverImg2,
-    HoverImg3,
-    HoverImg4,
-    HoverImg5,
-    HoverImg6,
-    HoverImg7,
-    HoverImg8,
-    HoverImg9,
+    HoverImg1, HoverImg2, HoverImg3, HoverImg4, HoverImg5,
+    HoverImg6, HoverImg7, HoverImg8, HoverImg9,
   ];
 
   const [randomTransforms, setRandomTransforms] = useState<{ rotate: string; translate: string }[]>([]);
@@ -147,12 +162,32 @@ const ImageScatterSection = () => {
                 onMouseEnter={() => handleHover(index)}
                 onTouchStart={() => handleHover(index)}
                 className={`w-20 sm:w-24 md:w-28 lg:w-40 transform transition-all duration-700 ease-out
-          ${isVisible ? "opacity-80 scale-110" : "opacity-60 sm:opacity-0 scale-100"}
-          pointer-events-auto cursor-pointer relative z-10`}
+            ${isVisible ? "opacity-80 scale-110" : "opacity-60 sm:opacity-0 scale-100"}
+            pointer-events-auto cursor-pointer relative z-10`}
                 style={{ rotate: transform.rotate, translate: transform.translate }}
             />
         );
       });
+
+  // 👇 Start typing when section is in view
+  const [startTyping, setStartTyping] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setStartTyping(true); // start once
+            obs.disconnect();     // stop observing after first trigger
+          }
+        },
+        { root: null, threshold: 0.35 } // ~35% visible triggers start
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const typedLines: Line[] = [
     [
@@ -172,7 +207,10 @@ const ImageScatterSection = () => {
   ];
 
   return (
-      <section className="relative py-32 overflow-hidden flex flex-col items-center justify-center min-h-screen bg-gray-200">
+      <section
+          ref={sectionRef}  // 👈 observe this section
+          className="relative py-32 overflow-hidden flex flex-col items-center justify-center min-h-screen bg-gray-200"
+      >
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-10">
           {imagesPerRow > 0 && (
               <div className="flex flex-wrap justify-center gap-4 md:gap-6 pointer-events-auto">
@@ -181,9 +219,15 @@ const ImageScatterSection = () => {
           )}
 
           <div className="relative z-10 pointer-events-none w-full max-w-4xl px-6">
-            {/* ✅ text aligned center */}
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground leading-relaxed text-center">
-              <Typewriter lines={typedLines} typingSpeed={28} linePause={700} />
+              {/* 👇 typing starts when section is in view */}
+              <Typewriter
+                  lines={typedLines}
+                  typingSpeed={14}
+                  linePause={300}
+                  shouldStart={startTyping}
+                  once
+              />
             </h2>
           </div>
 

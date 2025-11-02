@@ -2,18 +2,19 @@ import ImageScatterSection from "./ImageScatterSection.tsx";
 import { Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 // animation variants for the headline
-const textVariant = {
+const textVariant: Variants = {
   hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
+  visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
       delay: i * 0.2,
       duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
+      // narrow to a 4-tuple instead of number[]
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   }),
 };
@@ -33,6 +34,7 @@ const HeroSection = () => {
           <h1 className="text-4xl md:text-8xl lg:text-[150px] font-bold mb-6 leading-tight overflow-hidden">
             <motion.span
                 className="block"
+                variants={textVariant}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
