@@ -2,7 +2,21 @@ import ImageScatterSection from "./ImageScatterSection.tsx";
 import { Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
+// animation variants for the headline
+const textVariant = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.2,
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
 
 // Main hero section
 const HeroSection = () => {
@@ -15,20 +29,57 @@ const HeroSection = () => {
             Premium Web Solutions
           </p>
 
-          <h1 className="text-4xl md:text-8xl lg:text-[150px] font-bold mb-6 leading-tight">
-            We Design.
-            <br />
-            <span className="text-accent">We Build.</span>
-            <br />
-            We Scale.
+          {/* Animated heading */}
+          <h1 className="text-4xl md:text-8xl lg:text-[150px] font-bold mb-6 leading-tight overflow-hidden">
+            <motion.span
+                className="block"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={0}
+            >
+              We Design.
+            </motion.span>
+            <motion.span
+                className="block text-accent"
+                variants={textVariant}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={1}
+            >
+              We Build.
+            </motion.span>
+            <motion.span
+                className="block"
+                variants={textVariant}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={2}
+            >
+              We Scale.
+            </motion.span>
           </h1>
 
-          <p className="text-lg md:text-2xl text-muted-foreground mb-8 max-w-3xl">
+          <motion.p
+              className="text-lg md:text-2xl text-muted-foreground mb-8 max-w-3xl"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              viewport={{ once: true }}
+          >
             Transform your digital presence with high-end web solutions that drive
             real business growth.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-wrap justify-center gap-4">
+          <motion.div
+              className="flex flex-wrap justify-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1, duration: 0.6 }}
+              viewport={{ once: true }}
+          >
             <Link to="/contact">
               <Button
                   size="lg"
@@ -37,7 +88,7 @@ const HeroSection = () => {
                 Start Your Project
               </Button>
             </Link>
-          </div>
+          </motion.div>
         </section>
 
         {/* Scattered Image Section */}
