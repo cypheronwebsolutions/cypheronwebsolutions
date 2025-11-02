@@ -10,28 +10,61 @@ import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Navbar from "@/components/Navbar.tsx";
 import Footer from "@/components/Footer.tsx";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  const smoothWrapperRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!smoothWrapperRef.current || !contentRef.current) return;
+
+    // Create ScrollSmoother instance
+    const smoother = ScrollSmoother.create({
+      wrapper: smoothWrapperRef.current,
+      content: contentRef.current,
+      smooth: 1.5,
+      effects: true,
+      smoothTouch: 0.1,
+    });
+
+    return () => {
+      smoother.kill();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
+  return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         {/* ✅ Switched to HashRouter to avoid 404s on GitHub Pages */}
         <HashRouter>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Footer />
+          <div ref={smoothWrapperRef} id="smooth-wrapper">
+            <div ref={contentRef} id="smooth-content">
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Footer />
+            </div>
+          </div>
         </HashRouter>
       </TooltipProvider>
     </QueryClientProvider>
-);
+  );
+};
 
 export default App;

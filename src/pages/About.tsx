@@ -4,7 +4,7 @@ import { Users, Target, Lightbulb, Handshake } from "lucide-react";
 
 const About = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col">
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="text-center max-w-3xl mx-auto">
