@@ -3,7 +3,14 @@ import ImageScatterSection from "./ImageScatterSection.tsx";
 import { Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform, useReducedMotion, type Variants } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+  type Variants,
+  type MotionValue, // ← add this
+} from "framer-motion";
 
 // Staggered container = one-by-one fly-in
 const containerVariants: Variants = {
@@ -45,8 +52,10 @@ const HeroSection = () => {
   const flyOutX2 = useTransform(scrollYProgress, [START, END], [0,  DIST]);
   const flyOutX3 = useTransform(scrollYProgress, [START, END], [0, -DIST]);
 
-  const safeOpacity = prefersReduced ? 1 : flyOutOpacity;
-  const safeX = (xVal: never) => (prefersReduced ? 0 : xVal);
+  // ✅ Type-safe helpers
+  const safeOpacity: MotionValue<number> | number = prefersReduced ? 1 : flyOutOpacity;
+  const safeX = (xVal: MotionValue<number> | number): MotionValue<number> | number =>
+      prefersReduced ? 0 : xVal;
 
   return (
       <div>
