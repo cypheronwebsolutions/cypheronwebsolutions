@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import HoverImg1 from "@/assets/HeroSection/img1.png";
 import HoverImg2 from "@/assets/HeroSection/img2.png";
 import HoverImg3 from "@/assets/HeroSection/img3.png";
@@ -9,7 +9,7 @@ import HoverImg7 from "@/assets/HeroSection/img7.png";
 import HoverImg8 from "@/assets/HeroSection/img8.png";
 import HoverImg9 from "@/assets/HeroSection/img9.png";
 
-/** ---------- Typewriter (no shadow, centered, starts on view) ---------- */
+/* ----------------------- Typewriter Component ----------------------- */
 type Segment = { text: string; className?: string };
 type Line = Segment[];
 
@@ -17,8 +17,8 @@ const Typewriter = ({
                       lines,
                       typingSpeed = 28,
                       linePause = 700,
-                      shouldStart = true,     // 👈 new: external trigger
-                      once = true,            // 👈 new: start only once
+                      shouldStart = true,
+                      once = true,
                     }: {
   lines: Line[];
   typingSpeed?: number;
@@ -28,16 +28,12 @@ const Typewriter = ({
 }) => {
   const [lineIdx, setLineIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false); // 👈 new
+  const [hasStarted, setHasStarted] = useState(false);
   const timer = useRef<number | null>(null);
 
-  // Start logic (one-time by default)
   useEffect(() => {
     if (shouldStart) {
       setHasStarted((prev) => (once ? prev || true : true));
-    } else if (!once) {
-      // if not once, allow pausing/reset logic as needed (optional)
-      // setHasStarted(false);
     }
   }, [shouldStart, once]);
 
@@ -46,7 +42,6 @@ const Typewriter = ({
   const isLineDone = charIdx >= lineText.length;
   const isAllDone = lineIdx >= lines.length;
 
-  // Typing loop — only runs after hasStarted
   useEffect(() => {
     if (!hasStarted || isAllDone) return;
 
@@ -88,7 +83,6 @@ const Typewriter = ({
 
   return (
       <div className="space-y-2 text-center">
-        {/* Render nothing until we start (keeps layout clean) */}
         {!hasStarted ? null : (
             <>
               {doneLines.map((line, i) => (
@@ -107,18 +101,25 @@ const Typewriter = ({
       </div>
   );
 };
-/** ---------- /Typewriter ---------- */
+/* ----------------------- /Typewriter ----------------------- */
 
 const ImageScatterSection = () => {
   const [visibleImages, setVisibleImages] = useState<number[]>([]);
   const [imagesPerRow, setImagesPerRow] = useState(9);
+  const [startTyping, setStartTyping] = useState(false);
+  const [sectionVisible, setSectionVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
+
   const hoverImages = [
     HoverImg1, HoverImg2, HoverImg3, HoverImg4, HoverImg5,
     HoverImg6, HoverImg7, HoverImg8, HoverImg9,
   ];
 
-  const [randomTransforms, setRandomTransforms] = useState<{ rotate: string; translate: string }[]>([]);
+  const [randomTransforms, setRandomTransforms] = useState<
+      { rotate: string; translate: string }[]
+  >([]);
 
+  /* Handle responsiveness */
   const updateImagesPerRow = () => {
     const width = window.innerWidth;
     if (width < 766) setImagesPerRow(0);
@@ -132,6 +133,7 @@ const ImageScatterSection = () => {
     return () => window.removeEventListener("resize", updateImagesPerRow);
   }, []);
 
+  /* Random scattered transforms */
   useEffect(() => {
     const randoms = Array.from({ length: 18 }).map(() => ({
       rotate: `${Math.random() * 40 - 20}deg`,
@@ -140,6 +142,7 @@ const ImageScatterSection = () => {
     setRandomTransforms(randoms);
   }, []);
 
+  /* Hover image effect */
   const handleHover = (index: number) => {
     setVisibleImages((prev) => [...prev, index]);
     setTimeout(() => {
@@ -147,48 +150,25 @@ const ImageScatterSection = () => {
     }, 2000);
   };
 
-  const renderRow = (rowKey: string) =>
-      Array.from({ length: imagesPerRow }).map((_, i) => {
-        const index = rowKey === "row1" ? i : i + imagesPerRow;
-        const isVisible = visibleImages.includes(index);
-        const imgSrc = hoverImages[index % hoverImages.length];
-        const transform = randomTransforms[index] || { rotate: "0deg", translate: "0 0" };
-
-        return (
-            <img
-                key={`${rowKey}-${i}`}
-                src={imgSrc}
-                alt="Scatter visual"
-                onMouseEnter={() => handleHover(index)}
-                onTouchStart={() => handleHover(index)}
-                className={`w-20 sm:w-24 md:w-28 lg:w-40 transform transition-all duration-700 ease-out
-            ${isVisible ? "opacity-80 scale-110" : "opacity-60 sm:opacity-0 scale-100"}
-            pointer-events-auto cursor-pointer relative z-10`}
-                style={{ rotate: transform.rotate, translate: transform.translate }}
-            />
-        );
-      });
-
-  // 👇 Start typing when section is in view
-  const [startTyping, setStartTyping] = useState(false);
-  const sectionRef = useRef<HTMLElement | null>(null);
-
+  /* Fade-in when in view */
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            setStartTyping(true); // start once
-            obs.disconnect();     // stop observing after first trigger
+            setSectionVisible(true);
+            setStartTyping(true);
+            obs.disconnect();
           }
         },
-        { root: null, threshold: 0.35 } // ~35% visible triggers start
+        { root: null, threshold: 0.35 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
+  /* Typing text content */
   const typedLines: Line[] = [
     [
       { text: "At " },
@@ -206,10 +186,35 @@ const ImageScatterSection = () => {
     ],
   ];
 
+  /* Render image rows */
+  const renderRow = (rowKey: string) =>
+      Array.from({ length: imagesPerRow }).map((_, i) => {
+        const index = rowKey === "row1" ? i : i + imagesPerRow;
+        const isVisible = visibleImages.includes(index);
+        const imgSrc = hoverImages[index % hoverImages.length];
+        const transform = randomTransforms[index] || { rotate: "0deg", translate: "0 0" };
+
+        return (
+            <img
+                key={`${rowKey}-${i}`}
+                src={imgSrc}
+                alt="Scatter visual"
+                onMouseEnter={() => handleHover(index)}
+                onTouchStart={() => handleHover(index)}
+                className={`w-20 sm:w-24 md:w-28 lg:w-40 transform transition-all duration-700 ease-out
+          ${isVisible ? "opacity-80 scale-110" : "opacity-60 sm:opacity-0 scale-100"}
+          pointer-events-auto cursor-pointer relative z-10`}
+                style={{ rotate: transform.rotate, translate: transform.translate }}
+            />
+        );
+      });
+
   return (
       <section
-          ref={sectionRef}  // 👈 observe this section
-          className="relative py-32 overflow-hidden flex flex-col items-center justify-center min-h-screen bg-gray-200"
+          ref={sectionRef}
+          className={`relative py-32 overflow-hidden flex flex-col items-center justify-center min-h-screen bg-gray-200 transition-opacity duration-700 ${
+              sectionVisible ? "opacity-100" : "opacity-0"
+          }`}
       >
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-10">
           {imagesPerRow > 0 && (
@@ -220,7 +225,6 @@ const ImageScatterSection = () => {
 
           <div className="relative z-10 pointer-events-none w-full max-w-4xl px-6">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground leading-relaxed text-center">
-              {/* 👇 typing starts when section is in view */}
               <Typewriter
                   lines={typedLines}
                   typingSpeed={14}
