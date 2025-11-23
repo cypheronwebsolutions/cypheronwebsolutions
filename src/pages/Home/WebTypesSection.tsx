@@ -1,6 +1,13 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Building2, Globe, ShoppingCart, BarChart3, X } from "lucide-react";
+import {
+  Building2,
+  Globe,
+  ShoppingCart,
+  BarChart3,
+  X,
+  Blocks,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type CardItem = {
@@ -11,37 +18,89 @@ type CardItem = {
 };
 
 const cards: CardItem[] = [
-  { icon: Globe, title: "Landing Page",
-    desc: "High-converting single-page websites designed to capture leads and drive specific actions.",
-    bullets: ["Conversion-optimized design","A/B testing ready","Mobile responsive","Fast loading"] },
-  { icon: Building2, title: "Corporate Website",
-    desc: "Professional multi-page websites that establish credibility and showcase your brand.",
-    bullets: ["Professional design","Content management","SEO optimized","Brand consistency"] },
-  { icon: ShoppingCart, title: "E-commerce Site",
-    desc: "Complete online stores with payment processing, inventory management, and more.",
-    bullets: ["Payment integration","Inventory management","Order tracking","Customer accounts"] },
-  { icon: Globe, title: "Portfolio / Showcase",
-    desc: "Sleek, performance-focused sites to highlight your work and case studies.",
-    bullets: ["Gallery & case studies","CMS-ready","SEO & analytics","Contact integrations"] },
-  { icon: BarChart3, title: "Digital Marketing, SEO & Analytics",
-    desc: "Data-driven marketing solutions that enhance visibility, optimize conversions, and grow your audience.",
-    bullets: ["Search engine optimization (SEO)","Marketing analytics and reporting","Social media and ad management","Content strategy and performance tracking"] },
+  {
+    icon: Globe,
+    title: "Landing Page",
+    desc: "Single-page sites focused on one clear goal—perfect for campaigns, product launches, and lead generation.",
+    bullets: [
+      "Conversion-focused layouts",
+      "Optimized for lead capture",
+      "Mobile-first implementation",
+      "Fast, lightweight performance",
+    ],
+  },
+  {
+    icon: Building2,
+    title: "Corporate Website",
+    desc: "Professional multi-page sites that build trust, communicate your story, and support long-term brand growth.",
+    bullets: [
+      "Structured for clarity and depth",
+      "Easy content management (CMS-ready)",
+      "SEO-friendly architecture",
+      "Consistent brand look and feel",
+    ],
+  },
+  {
+    icon: ShoppingCart,
+    title: "E-commerce Site",
+    desc: "Scalable online stores designed to make browsing, buying, and repeat purchases effortless for your customers.",
+    bullets: [
+      "Secure payment integration",
+      "Inventory & order management",
+      "Customer account & checkout flows",
+      "Analytics-ready for sales insights",
+    ],
+  },
+  {
+    icon: Globe,
+    title: "Personal Portfolio / Showcase",
+    desc: "Modern, polished sites that highlight your work, services, and story—ideal for freelancers and small businesses.",
+    bullets: [
+      "Project & service showcases",
+      "Clean, professional layouts",
+      "Simple content editing",
+      "Contact forms & call-to-actions",
+    ],
+  },
+  {
+    icon: BarChart3,
+    title: "Digital Marketing, SEO & Analytics",
+    desc: "Ongoing support to help you get found, understand your traffic, and turn visitors into loyal customers.",
+    bullets: [
+      "On-page & technical SEO setup",
+      "Performance and traffic reporting",
+      "Ad and campaign tracking support",
+      "Content and conversion insights",
+    ],
+  },
+  {
+    icon: Blocks,
+    title: "UI/UX",
+    desc: "Thoughtfully crafted interfaces that feel intuitive, reduce friction, and keep users engaged with your product.",
+    bullets: [
+      "User journeys and flows",
+      "Wireframes & interactive prototypes",
+      "Design systems & components",
+      "UX reviews and improvement plans",
+    ],
+  },
 ];
 
-function FlippableCard({ item, isLast }: { item: CardItem; isLast?: boolean }) {
+function FlippableCard({ item }: { item: CardItem }) {
   const { icon: Icon, title, desc, bullets } = item;
   const [flipped, setFlipped] = useState(false);
 
   return (
       <Card
           data-card
+          onClick={() => {
+            if (!flipped) setFlipped(true); // click anywhere on card (front) to flip
+          }}
           className={[
-            // ensure each card always takes its width
             "shrink-0",
             "border-0 hover:shadow-xl transition-transform duration-300 hover:-translate-y-1",
             "min-w-[260px] md:min-w-[320px] rounded-xl overflow-hidden",
-            // snap start for all, snap end for the last card so it can align to the right edge
-            isLast ? "snap-end mr-3" : "snap-start",
+            "snap-start",
           ].join(" ")}
       >
         <CardContent className="p-0 h-[300px] md:h-[340px] relative">
@@ -50,9 +109,9 @@ function FlippableCard({ item, isLast }: { item: CardItem; isLast?: boolean }) {
                 className="relative h-full w-full transition-transform duration-500 transform-gpu [transform-style:preserve-3d]"
                 style={{ transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)" }}
             >
-              {/* FRONT — make the visual change obvious */}
+              {/* FRONT */}
               <div
-                  className="absolute inset-0 bg-primary text-primary-foreground rounded-xl flex flex-col justify-between p-6 [backface-visibility:hidden]"
+                  className="absolute inset-0 bg-primary text-primary-foreground rounded-xl flex flex-col justify-between p-6 [backface-visibility:hidden] cursor-pointer"
                   aria-hidden={flipped}
               >
                 <div>
@@ -61,20 +120,20 @@ function FlippableCard({ item, isLast }: { item: CardItem; isLast?: boolean }) {
                     {title}
                   </h3>
                 </div>
+                {/* Plus is a visual cue; click anywhere flips */}
                 <Button
                     size="icon"
                     variant="secondary"
-                    className="self-end rounded-full w-9 h-9"
-                    onClick={() => setFlipped(true)}
+                    className="self-end rounded-full w-9 h-9 pointer-events-none"
                 >
                   +
                 </Button>
               </div>
 
-              {/* BACK — clean card face */}
+              {/* BACK */}
               <div
                   id={`${title}-details`}
-                  className="absolute inset-0 bg-card text-card-foreground rounded-xl flex flex-col justify-between p-6 gap-4 [backface-visibility:hidden]"
+                  className="absolute inset-0 bg-gray-200 text-card-foreground rounded-xl flex flex-col justify-between p-6 gap-4 [backface-visibility:hidden]"
                   style={{ transform: "rotateY(180deg)" }}
                   aria-hidden={!flipped}
               >
@@ -88,11 +147,11 @@ function FlippableCard({ item, isLast }: { item: CardItem; isLast?: boolean }) {
                   </ul>
                 </div>
 
-                {/* Learn More left, close on right */}
                 <div className="flex justify-between items-center">
                   <Button
                       size="sm"
                       className="bg-primary text-primary-foreground hover:bg-primary/90"
+                      // you can wire up navigation or modal later
                   >
                     Learn More
                   </Button>
@@ -100,7 +159,10 @@ function FlippableCard({ item, isLast }: { item: CardItem; isLast?: boolean }) {
                       variant="ghost"
                       size="icon"
                       className="rounded-full"
-                      onClick={() => setFlipped(false)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // prevent card click from re-triggering
+                        setFlipped(false);
+                      }}
                   >
                     <X className="w-5 h-5" />
                   </Button>
@@ -137,15 +199,25 @@ const WebTypesSection = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               What We Offer
             </h2>
-            <p>Explore our range of specialized web and digital solutions</p>
+            <p>Explore our range of crafted web and digital solutions.</p>
           </div>
 
           {/* Arrow controls */}
           <div className="hidden md:flex items-center gap-3 justify-end mb-4">
-            <Button variant="outline" size="icon" onClick={() => scrollStep(-1)} aria-label="Scroll left">
+            <Button
+                variant="outline"
+                size="icon"
+                onClick={() => scrollStep(-1)}
+                aria-label="Scroll left"
+            >
               ‹
             </Button>
-            <Button variant="outline" size="icon" onClick={() => scrollStep(1)} aria-label="Scroll right">
+            <Button
+                variant="outline"
+                size="icon"
+                onClick={() => scrollStep(1)}
+                aria-label="Scroll right"
+            >
               ›
             </Button>
           </div>
@@ -156,7 +228,7 @@ const WebTypesSection = () => {
                 ref={scrollerRef}
                 className={[
                   "grid grid-flow-col auto-cols-[minmax(260px,320px)] md:auto-cols-[minmax(300px,360px)]",
-                  "gap-8 overflow-x-auto scroll-smooth snap-x snap-mandatory px-1 py-2 pr-12", // <-- right padding so the last card can be fully revealed
+                  "gap-8 overflow-x-auto scroll-smooth snap-x snap-mandatory px-1 py-2",
                   "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
                   "cursor-grab active:cursor-grabbing",
                 ].join(" ")}
@@ -165,11 +237,8 @@ const WebTypesSection = () => {
                 tabIndex={0}
             >
               {cards.map((item, idx) => (
-                  <FlippableCard key={idx} item={item} isLast={idx === cards.length - 1} />
+                  <FlippableCard key={idx} item={item} />
               ))}
-
-              {/* End spacer to guarantee last card visibility on snap */}
-              <div aria-hidden className="w-2 shrink-0" />
             </div>
           </div>
 
