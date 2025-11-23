@@ -8,6 +8,12 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import LandingPage from "./pages/Services/LandingPage";
+import CorporateWebsite from "./pages/Services/CorporateWebsite";
+import Ecommerce from "./pages/Services/Ecommerce";
+import Portfolio from "./pages/Services/Portfolio";
+import DigitalMarketing from "./pages/Services/DigitalMarketing";
+import UIUX from "./pages/Services/UIUX";
 import Navbar from "@/components/Navbar.tsx";
 import Footer from "@/components/Footer.tsx";
 import { useEffect, useRef } from "react";
@@ -55,6 +61,12 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/services" element={<Services />} />
+                <Route path="/services/landing-page" element={<LandingPage />} />
+                <Route path="/services/corporate-website" element={<CorporateWebsite />} />
+                <Route path="/services/ecommerce" element={<Ecommerce />} />
+                <Route path="/services/portfolio" element={<Portfolio />} />
+                <Route path="/services/digital-marketing" element={<DigitalMarketing />} />
+                <Route path="/services/uiux" element={<UIUX />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
