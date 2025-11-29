@@ -3,7 +3,7 @@ import {Palette, Smartphone, Target, Zap} from "lucide-react";
 
 const WhyChooseSection = () => {
   return (
-      <section className="py-20">
+      <section className="py-20 bg-muted">
         <div className="container mx-auto px-4">
           {/* Heading */}
           <div className="max-w-3xl mx-auto text-center mb-12">

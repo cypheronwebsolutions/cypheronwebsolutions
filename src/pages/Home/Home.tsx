@@ -1,7 +1,7 @@
 import HeroSection from "./HeroSection.tsx"
 import WebTypesSection from "./WebTypesSection.tsx"
 import WhyChooseSection from "./WhyChooseSection.tsx";
-import ProvenResults from "./ProvenResults"
+// import ProvenResults from "./ProvenResults"
 import ProcessSection from "./ProcessSection.tsx";
 import FAQ from "./FAQ.tsx";
 import CTA from "@/components/CTA.tsx"
@@ -20,7 +20,7 @@ const Home = () => {
       <WhyChooseSection/>
 
       {/* Proven Results */}
-      <ProvenResults/>
+      {/*<ProvenResults/>*/}
 
       {/* Process Section */}
       <ProcessSection/>
